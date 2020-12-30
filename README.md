@@ -1,15 +1,17 @@
 # Prerequisites
 
-On Ubuntu, you need
+On Ubuntu,
 
+```
 apt-get install device-tree-compiler
 apt-get install libmpfr-dev
 apt-get install libmpfc-dev
 apt-get install makeinfo
+```
 
 # Instructions
 
-Follow (mostly) https://gms.tf/riscv-vector.html#getting-started
+Follow (mostly) [https://gms.tf/riscv-vector.html#getting-started](https://gms.tf/riscv-vector.html#getting-started).
 
 ## Spike
 
