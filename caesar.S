@@ -71,31 +71,31 @@ main:
 
 # The top of the encryption loop.
 .encrypt:
-	# tell the vector system that we want to slurp up as many as
-	# 4 bytes at a time. However, if there are fewer than 4 bytes
-	# (left) to encode, then only encode that many bytes.
 	li	a1, 4
 	bgt a2, a1, .slurp_count_of_4_ok
 	mv	a1, a2
 .slurp_count_of_4_ok:
+
 	# Each vector register is VLEN bits long. Each element in each vector
 	# register is SEW bits wide. Therefore, each vector contains VLEN/SEW
 	# elements. However, because VLEN is platform-specific, we don't know
-	# VLEN/SEW a priori, even if SEW is static (which it does not have 
-	# to be). Vector registers can be grouped together and viewed as a
+	# VLEN/SEW a priori, even if SEW is known at the time we compile
+	# (which it does not have to be).
+	# Vector registers can be grouped together and viewed as a
 	# larger, single logical register by setting LMUL to something other
-	# than 1. vsetvli is used to configure vector operations. 
+	# than 1.
+	# vsetvli is used to configure vector operations.
 	# The semantics of the following use of vsetvli are:
 	# 1. Set SEW to 8 bits.
 	# 2. Set the LMUL to 1.
-	# 3. Find out how many 4 8 bit elements fit in a single vector register.
+	# 3. Request that each vector operation act on a1 8 bit elements.
+	# 4. Set t0 to min(a1, VLEN/SEW).
 	vsetvli	t0, a1, e8, m1
 
-	# t0 contains max(4, VLEN/SEW).
-
-	# load t0 bytes (bytes are 8 bits) of plaintext into v0
+	# load t0 bytes (bytes are SEW bits in this case) of plaintext into v0
 	vlbu.v	v0, (a4)
-	# load t0 bytes of key into 1th vector
+	# load t0 bytes of key into 1th vector. This is safe because there are
+	# 4 bytes of key and t0 is never more than 4.
 	vlbu.v	v1, (a5)
 	# encrypt t0 bytes
 	vadd.vv	v0, v0, v1
@@ -119,10 +119,16 @@ main:
 	lla a0, .result_string
 	call printf@plt
 
+	# Set the return value to a2, the length of the string encrypted.
 	mv	a0,a1
+	# Restore saved registers from memory.
 	ld	ra,8(sp)
 	ld	s0,0(sp)
 	addi	sp,sp,40
+
+	# return from main to _start.
 	jr	ra
+
+
 	.size	main, .-main
 	.section	.note.GNU-stack,"",@progbits	#set a non-executable program stack.
