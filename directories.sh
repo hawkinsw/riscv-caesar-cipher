@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Change the directories below. After doing so, delete the next two lines.
+echo "Set directories before using!"
+exit
+
 SPIKE_HOME_DIR=/home/hawkinsw/code/riscv-testing/spike
 SPIKE_INSTALL_DIR=/home/hawkinsw/code/riscv-support-install/spike
 
