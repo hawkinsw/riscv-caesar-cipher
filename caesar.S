@@ -92,14 +92,19 @@ main:
 	# 4. Set t0 to min(a1, VLEN/SEW).
 	vsetvli	t0, a1, e8, m1
 
-	# load t0 bytes (bytes are SEW bits in this case) of plaintext into v0
+	# At this point t0 and vl are equal. vl is the control register that
+	# tells the vector processor how many elements are in each vector
+	# register.
+
+	# load vl (aka t0) bytes (bytes are SEW bits in this case) of plaintext
+	# into v0
 	vlbu.v	v0, (a4)
-	# load t0 bytes of key into 1th vector. This is safe because there are
-	# 4 bytes of key and t0 is never more than 4.
+	# load vl (aka t0) bytes of key into 1th vector. This is safe because
+	# there are 4 bytes of key and t0 is never more than 4.
 	vlbu.v	v1, (a5)
-	# encrypt t0 bytes
+	# encrypt vl (aka t0) bytes
 	vadd.vv	v0, v0, v1
-	# store t0 bytes of encrypted text into memory
+	# store vl (aka t0) bytes of encrypted text into memory
 	vsb.v	v0, (a3)
 
 	# plaintext -= slurped_amt

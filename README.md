@@ -10,6 +10,8 @@ learning, I want the source code commentary to be as educational as possible.
 
 Special thanks to [Georg Sauthoff](https://gms.tf/riscv-vector.html) whose writing really helped me begin this exercise!
 
+Special thanks also to [Hanna Kruppe](https://github.com/hanna-kruppe) who took the time to read through the source code and counsel me on the RISC-V ISA vector extension.
+
 ## Running
 
 As of this writing, the Vector ISA is not standardized so you will need an
@@ -35,6 +37,10 @@ Execute the `build-caesar.sh` script.
 ## Executing
 
 Execute the `run-caesar.sh` script.
+
+## Debugging
+
+Execute the `debug-caesar.sh` script.
 
 ## Comments/Issues
 
